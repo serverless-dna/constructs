@@ -3,7 +3,7 @@
   "description": "A collection of useful CDK constructs of known, repeatable patterns that are easily consumable.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/2704782+walmsles/constructs.git"
+    "url": "https://github.com/serverless-dna/constructs"
   },
   "scripts": {
     "build": "npx projen build",

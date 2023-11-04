@@ -15,7 +15,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   name: '@serverless-dna/constructs',
   packageManager,
   projenrcTs: true,
-  repositoryUrl: 'https://github.com/2704782+walmsles/constructs.git',
+  repositoryUrl: 'https://github.com/serverless-dna/constructs',
   // Dependencies past this line
   bundledDeps: [
     '@aws-sdk/client-eventbridge',
