@@ -8,13 +8,13 @@ A library containing a set of re-usable AWS CDK constructs.
 npm install @serverless-dna/constructs
 ```
 
-## The Constructs
+# The Constructs
 
-### SocketApi
+## SocketApi
 
 This construct creates an AWS WebSocket API with routes that are handled by AWS Lambda functions.  A WebSocket can only exist when there are one or more valid integrations defined.  If you do not define any integrations the WebSocket API will not be deployed.
 
-#### Getting Started
+### Getting Started
 
 The SocketAPI accepts an array of route definitions of type **ISocketFunction**.
 
@@ -55,11 +55,11 @@ export class ApplicationStack extends Stack {
 }
 ```
 
-#### SocketTasks
+## SocketTasks
 
 This construct inherits from the SocketAPI and creates a complete Asycnrhonouse Task Execution framework using WebSockets and AWS Lambda for running long-running tasks.
 
-#### Getting Started
+### Getting Started
 
 ```typescript
 import { SocketTasks } from '@serverless-dna/constructs';

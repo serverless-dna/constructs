@@ -16,23 +16,25 @@ export interface ITaskFunctionConfig {
 export interface ISocketTasksConfig {
   readonly socketApiConfig?: ISocketApiConfig;
   readonly eventBus?: IEventBus;
+  readonly notifySQS?: IQueue;
   readonly taskFunctions: ITaskFunctionConfig[];
 }
 
 export class SocketTasks extends SocketApi {
   readonly eventBus: IEventBus;
+  readonly notifySQS: IQueue;
 
   constructor(scope: Construct, id: string, config: ISocketTasksConfig) {
     super(scope, id, config?.socketApiConfig);
 
     this.eventBus = this.createEventBus(config?.eventBus);
+    this.notifySQS = this.createNotifySQS(config?.notifySQS);
     this.createSubmitHandler(this.eventBus);
     this.configureTasks(config);
   }
 
   protected configureTasks(config: ISocketTasksConfig): void {
-    const notifyQueue = this.createNotifySQS();
-
+    const notifyQueue = this.notifySQS;
     this.createNotifyHandler(notifyQueue);
 
     config?.taskFunctions.forEach(
@@ -53,8 +55,8 @@ export class SocketTasks extends SocketApi {
     );
   }
 
-  protected createNotifySQS(): IQueue {
-    return new Queue(this, 'notify-queue', {});
+  protected createNotifySQS(theQueue?: IQueue): IQueue {
+    return theQueue ?? new Queue(this, 'notify-queue', {});
   }
 
   protected createEventBus(theBus?: IEventBus): IEventBus {

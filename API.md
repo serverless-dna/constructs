@@ -470,6 +470,7 @@ Any object.
 | --- | --- | --- |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.property.eventBus">eventBus</a></code> | <code>aws-cdk-lib.aws_events.IEventBus</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.property.notifySQS">notifySQS</a></code> | <code>aws-cdk-lib.aws_sqs.IQueue</code> | *No description.* |
 
 ---
 
@@ -492,6 +493,16 @@ public readonly eventBus: IEventBus;
 ```
 
 - *Type:* aws-cdk-lib.aws_events.IEventBus
+
+---
+
+##### `notifySQS`<sup>Required</sup> <a name="notifySQS" id="@serverless-dna/constructs.SocketTasks.property.notifySQS"></a>
+
+```typescript
+public readonly notifySQS: IQueue;
+```
+
+- *Type:* aws-cdk-lib.aws_sqs.IQueue
 
 ---
 
@@ -623,6 +634,7 @@ public readonly type: SocketApiIntegrationType;
 | --- | --- | --- |
 | <code><a href="#@serverless-dna/constructs.ISocketTasksConfig.property.taskFunctions">taskFunctions</a></code> | <code><a href="#@serverless-dna/constructs.ITaskFunctionConfig">ITaskFunctionConfig</a>[]</code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.ISocketTasksConfig.property.eventBus">eventBus</a></code> | <code>aws-cdk-lib.aws_events.IEventBus</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.ISocketTasksConfig.property.notifySQS">notifySQS</a></code> | <code>aws-cdk-lib.aws_sqs.IQueue</code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.ISocketTasksConfig.property.socketApiConfig">socketApiConfig</a></code> | <code><a href="#@serverless-dna/constructs.ISocketApiConfig">ISocketApiConfig</a></code> | *No description.* |
 
 ---
@@ -644,6 +656,16 @@ public readonly eventBus: IEventBus;
 ```
 
 - *Type:* aws-cdk-lib.aws_events.IEventBus
+
+---
+
+##### `notifySQS`<sup>Optional</sup> <a name="notifySQS" id="@serverless-dna/constructs.ISocketTasksConfig.property.notifySQS"></a>
+
+```typescript
+public readonly notifySQS: IQueue;
+```
+
+- *Type:* aws-cdk-lib.aws_sqs.IQueue
 
 ---
 
