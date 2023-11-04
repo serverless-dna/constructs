@@ -1,5 +1,5 @@
 {
-  "name": "@serverlessdna/constructs",
+  "name": "@serverless-dna/constructs",
   "description": "A collection of useful CDK constructs of known, repeatable patterns that are easily consumable.",
   "repository": {
     "type": "git",

@@ -12,7 +12,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.2.0',
   majorVersion: 0,
-  name: '@serverlessdna/constructs',
+  name: '@serverless-dna/constructs',
   packageManager,
   projenrcTs: true,
   repositoryUrl: 'https://github.com/2704782+walmsles/constructs.git',
