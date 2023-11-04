@@ -15,6 +15,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   packageManager,
   projenrcTs: true,
   repositoryUrl: 'https://github.com/2704782+walmsles/constructs.git',
+  // Dependencies past this line
   bundledDeps: [
     '@aws-sdk/client-eventbridge',
     '@aws-sdk/client-apigatewaymanagementapi',
@@ -27,9 +28,6 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
     '@aws-cdk/aws-apigatewayv2-alpha@^2.100.0-alpha.0',
     '@aws-cdk/aws-apigatewayv2-integrations-alpha@^2.100.0-alpha.0',
   ],
-  // deps: [],                /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // packageName: undefined,  /* The "name" in package.json. */
 });
 
 constructLib.synth();
