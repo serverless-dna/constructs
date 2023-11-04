@@ -75,7 +75,6 @@
     "@aws-sdk/client-apigatewaymanagementapi",
     "@aws-sdk/client-eventbridge"
   ],
-  "pnpm": {},
   "keywords": [
     "cdk"
   ],

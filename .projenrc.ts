@@ -1,6 +1,6 @@
 import { awscdk, javascript } from 'projen';
 
-const packageManager = javascript.NodePackageManager.PNPM;
+const packageManager = javascript.NodePackageManager.NPM;
 const cdkVersion = '2.104.0';
 
 const constructLib = new awscdk.AwsCdkConstructLibrary({
