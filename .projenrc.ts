@@ -11,6 +11,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   description: 'A collection of useful CDK constructs of known, repeatable patterns that are easily consumable.',
   defaultReleaseBranch: 'main',
   jsiiVersion: '~5.2.0',
+  majorVersion: 0,
   name: '@serverlessdna/constructs',
   packageManager,
   projenrcTs: true,
