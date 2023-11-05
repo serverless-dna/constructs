@@ -1,6 +1,8 @@
+![A Young Woman looking at modular things to build code](assets/serverless-dna-constructs.png)
+
 # Serverless DNA Constructs
 
-A library containing a set of re-usable AWS CDK constructs.
+A library containing a set of re-usable AWS CDK constructs.  Created and Published by [Serverless DNA](https://serverlessdna.com)
 
 ## Installation
 
