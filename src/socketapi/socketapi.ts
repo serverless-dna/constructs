@@ -26,6 +26,50 @@ export interface ISocketApiConfig {
   readonly websocketConfig?: WebSocketApiProps;
 }
 
+/**
+ * This construct creates an AWS WebSocket API with routes that are handled by AWS Lambda functions.  A WebSocket can only exist when there are one or more valid integrations defined.  If you do not define any integrations the WebSocket API will not be deployed.
+ *
+ * ## Getting Started
+ *
+ * The SocketAPI accepts an array of route definitions of type **ISocketFunction**.
+ *
+ * ```typescript
+ *  export interface ISocketFunction {
+ *    readonly route: string;
+ *    readonly type?: SocketApiIntegrationType;
+ *    readonly integration: Function;
+ *    readonly returnResponse?: boolean;
+ *  }
+ * ```
+ *
+ * To create a WebSocket API you will need to provide a Lambda handler construct to execute your WebSocket API action.  The following example shows how to setup a WebSocket API with a **test** action route which is handled by the **test-func** lambda handler.
+ *
+ * ```typescript
+ *  import { SocketApi } from '@serverless-dna/constructs';
+ *  import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+ *  import { Runtime } from 'aws-cdk-lib/aws-lambda';
+ *  import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+ *  import { Construct } from 'constructs';
+ *  import { IntegrationHandlers } from './integrations';
+ *
+ *  export class ApplicationStack extends Stack {
+ *    constructor(scope: Construct, id: string, props?: StackProps) {
+ *    super(scope, id, props);
+ *
+ *    const handler = new NodejsFunction(this, `test-func`, {
+ *      entry: `${__dirname}/integrations.ts`,
+ *      handler: IntegrationHandlers.noOp,
+ *      runtime: Runtime.NODEJS_18_X,
+ *      timeout: Duration.seconds(3),
+ *    });
+ *
+ *    new SocketApi(this, 'socket-api', {
+ *      routes: [{ route: 'test', integration: handler, returnResponse: true }],
+ *      });
+ *    }
+ *  }
+ * ```
+ */
 export class SocketApi extends DnaConstruct {
   protected stage: string;
   protected namePrefix: string;
