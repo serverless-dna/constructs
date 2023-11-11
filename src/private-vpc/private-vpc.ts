@@ -12,6 +12,7 @@ export interface IEndpointService {
   readonly service: InterfaceVpcEndpointAwsService | GatewayVpcEndpointAwsService;
 }
 
+
 export interface IPrivateVpcProps {
   /**
    * Use an existing VPC.
@@ -39,6 +40,37 @@ export interface IPrivateVpcProps {
   readonly endpointServices?: IEndpointService[];
 }
 
+/**
+ * This construct creates a completely private VPC in your account.  It creates only a private subnet with no Internet Gateway or NAT instance so there is no access out to the internet.
+ * When creating the VPC you can pass in an array of `IEndpointService` objects to create the necessary virtual private endpoints.
+ *
+ * ## Getting Started
+ *
+ * The following stack will create a Private VPC with VPC Endpoints for S3, Secrets Manager and Systems Manager.  For S3 and DynamoDB VPC Gateway endpoints should be used.  The construct deals with the different creation mechanisms so you just need to list out the endpoints you need to use.
+ * The endpoints will have private DNS configured so you do not need to change your code that is accessing the endpoint services - placing an AWS Lambda into a Private VPC will be the same code as a more public or no VPC.
+ *
+ * ```typescript
+ * import * as cdk from 'aws-cdk-lib';
+ * import { InterfaceVpcEndpointAwsService, GatewayVpcEndpointAwsService } from 'aws-cdk-lib/aws-ec2';
+ * import { Construct } from 'constructs';
+ * import { PrivateVpc } from '@serverless-dna/constructs';
+ *
+ * export class VpcStack extends cdk.Stack {
+ *   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+ *     super(scope, id, props);
+ *
+ *     new PrivateVpc(this, 'vpc-priv', {
+ *       maxAzs: 3,
+ *       endpointServices: [
+ *         { name: 's3', service: GatewayVpcEndpointAwsService.S3 },
+ *         { name: 'sm', service: InterfaceVpcEndpointAwsService.SECRETS_MANAGER },
+ *         { name: 'ssm', service: InterfaceVpcEndpointAwsService.SSM },
+ *       ],
+ *     });
+ *   }
+ * }
+ * ```
+ */
 export class PrivateVpc extends Construct {
   /**
    * A new private vpc instance or the one provided in the construct config
@@ -54,7 +86,7 @@ export class PrivateVpc extends Construct {
     }
 
     this.vpc = this.createVpc(config ?? {});
-
+    this.createEndpointServices(config?.endpointServices ?? []);
   }
 
   createVpc(config: IPrivateVpcProps): Vpc {
@@ -70,14 +102,22 @@ export class PrivateVpc extends Construct {
     });
   }
 
-  createEndpointServices(endpointServices: IEndpointService[]): void {
-    // Enable VPC endpoints
-    for (const service of endpointServices) {
+  /**
+   * Check if Service is a gatewayENdpoint service.
+   * @param service
+   * @returns boolean
+   */
+  isGatewayService(service: InterfaceVpcEndpointAwsService | GatewayVpcEndpointAwsService): boolean {
+    return service.name.endsWith('s3')
+      || service.name.endsWith('dynamodb');
+  }
 
-      if (service.service instanceof InterfaceVpcEndpointAwsService) {
-        this.addInterfaceEndpoint(service.name, service.service as InterfaceVpcEndpointAwsService);
-      } else if (service.service instanceof GatewayVpcEndpointAwsService) {
+  createEndpointServices(endpointServices: IEndpointService[]): void {
+    for (const service of endpointServices) {
+      if (this.isGatewayService(service.service)) {
         this.addGatewayEndpoint(service.name, service.service as GatewayVpcEndpointAwsService);
+      } else {
+        this.addInterfaceEndpoint(service.name, service.service as InterfaceVpcEndpointAwsService);
       }
     }
   }

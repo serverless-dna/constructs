@@ -337,6 +337,51 @@ A new private vpc instance or the one provided in the construct config.
 
 ### SocketApi <a name="SocketApi" id="@serverless-dna/constructs.SocketApi"></a>
 
+This construct creates an AWS WebSocket API with routes that are handled by AWS Lambda functions.
+
+A WebSocket can only exist when there are one or more valid integrations defined.  If you do not define any integrations the WebSocket API will not be deployed.
+
+## Getting Started
+
+The SocketAPI accepts an array of route definitions of type **ISocketFunction**.
+
+```typescript
+ export interface ISocketFunction {
+   readonly route: string;
+   readonly type?: SocketApiIntegrationType;
+   readonly integration: Function;
+   readonly returnResponse?: boolean;
+ }
+```
+
+To create a WebSocket API you will need to provide a Lambda handler construct to execute your WebSocket API action.  The following example shows how to setup a WebSocket API with a **test** action route which is handled by the **test-func** lambda handler.
+
+```typescript
+ import { SocketApi } from '@serverless-dna/constructs';
+ import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+ import { Runtime } from 'aws-cdk-lib/aws-lambda';
+ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+ import { Construct } from 'constructs';
+ import { IntegrationHandlers } from './integrations';
+
+ export class ApplicationStack extends Stack {
+   constructor(scope: Construct, id: string, props?: StackProps) {
+   super(scope, id, props);
+
+   const handler = new NodejsFunction(this, `test-func`, {
+     entry: `${__dirname}/integrations.ts`,
+     handler: IntegrationHandlers.noOp,
+     runtime: Runtime.NODEJS_18_X,
+     timeout: Duration.seconds(3),
+   });
+
+   new SocketApi(this, 'socket-api', {
+     routes: [{ route: 'test', integration: handler, returnResponse: true }],
+     });
+   }
+ }
+```
+
 #### Initializers <a name="Initializers" id="@serverless-dna/constructs.SocketApi.Initializer"></a>
 
 ```typescript
@@ -521,6 +566,54 @@ The tree node.
 
 ### SocketTasks <a name="SocketTasks" id="@serverless-dna/constructs.SocketTasks"></a>
 
+This construct inherits from the SocketAPI and creates a complete Asychronous Task Execution framework using WebSockets and AWS Lambda for running long-running tasks.
+
+An ideal use case when your tasks take too long to trigger via an API Gateway directly!
+
+## Getting Started
+
+```typescript
+import { SocketTasks } from '@serverless-dna/constructs';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Construct } from 'constructs';
+import { IntegrationHandlers } from './integrations';
+
+export class ApplicationStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    const handlerOne = new NodejsFunction(this, `handler-one`, {
+      entry: `${__dirname}/integrations.ts`,
+      handler: IntegrationHandlers.taskHandler,
+      runtime: Runtime.NODEJS_18_X,
+      timeout: Duration.seconds(3),
+    });
+
+    const handlerTwo = new NodejsFunction(this, `handler-two`, {
+      entry: `${__dirname}/integrations.ts`,
+      handler: IntegrationHandlers.taskFail,
+      runtime: Runtime.NODEJS_18_X,
+      timeout: Duration.seconds(3),
+    });
+
+    new SocketTasks(this, `tasks`, {
+      taskFunctions: [
+        {
+          type: ['task-type'],
+          func: handlerOne,
+        },
+        {
+          type: ['task-type-2'],
+          func: handlerTwo,
+        },
+      ],
+    });
+  }
+}
+```
+
 #### Initializers <a name="Initializers" id="@serverless-dna/constructs.SocketTasks.Initializer"></a>
 
 ```typescript
@@ -687,8 +780,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.property.eventBus">eventBus</a></code> | <code>aws-cdk-lib.aws_events.IEventBus</code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.property.notifySQS">notifySQS</a></code> | <code>aws-cdk-lib.aws_sqs.IQueue</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.property.eventBus">eventBus</a></code> | <code>aws-cdk-lib.aws_events.IEventBus</code> | reference to the `IEventBus` used by the construct to trigger the defined tasks. |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.property.notifySQS">notifySQS</a></code> | <code>aws-cdk-lib.aws_sqs.IQueue</code> | reference to the SQS Queue used by the construct for notification purposes. |
 
 ---
 
@@ -712,6 +805,8 @@ public readonly eventBus: IEventBus;
 
 - *Type:* aws-cdk-lib.aws_events.IEventBus
 
+reference to the `IEventBus` used by the construct to trigger the defined tasks.
+
 ---
 
 ##### `notifySQS`<sup>Required</sup> <a name="notifySQS" id="@serverless-dna/constructs.SocketTasks.property.notifySQS"></a>
@@ -721,6 +816,8 @@ public readonly notifySQS: IQueue;
 ```
 
 - *Type:* aws-cdk-lib.aws_sqs.IQueue
+
+reference to the SQS Queue used by the construct for notification purposes.
 
 ---
 

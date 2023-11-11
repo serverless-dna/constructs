@@ -35,7 +35,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
 
 const typeDoc = 'type-doc';
 const typeDocTask = constructLib.addTask(typeDoc, {
-  exec: 'npx typedoc --out docs src',
+  exec: 'npx typedoc --readme ./typedoc-root.md --name "Serverless DNA Constructs" --out docs src',
 });
 const postCompileTask = constructLib.tasks.tryFind('post-compile');
 if (postCompileTask) {
