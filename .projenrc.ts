@@ -25,6 +25,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   devDeps: [
     '@aws-cdk/aws-apigatewayv2-alpha@2.100.0-alpha.0',
     '@aws-cdk/aws-apigatewayv2-integrations-alpha@2.100.0-alpha.0',
+    'typedoc',
   ],
   peerDeps: [
     '@aws-cdk/aws-apigatewayv2-alpha@^2.100.0-alpha.0',
@@ -32,4 +33,12 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   ],
 });
 
+const typeDoc = 'type-doc';
+const typeDocTask = constructLib.addTask(typeDoc, {
+  exec: 'npx typedoc --readme ./README.md --name "Serverless DNA Constructs" --out docs src',
+});
+const postCompileTask = constructLib.tasks.tryFind('post-compile');
+if (postCompileTask) {
+  postCompileTask.spawn(typeDocTask);
+}
 constructLib.synth();

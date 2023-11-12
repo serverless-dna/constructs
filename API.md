@@ -14,8 +14,8 @@ new DnaConstruct(scope: Construct, id: string)
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@serverless-dna/constructs.DnaConstruct.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.DnaConstruct.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.DnaConstruct.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | - the construct resource belong to. |
+| <code><a href="#@serverless-dna/constructs.DnaConstruct.Initializer.parameter.id">id</a></code> | <code>string</code> | - the logical id of the construct. |
 
 ---
 
@@ -23,11 +23,15 @@ new DnaConstruct(scope: Construct, id: string)
 
 - *Type:* constructs.Construct
 
+the construct resource belong to.
+
 ---
 
 ##### `id`<sup>Required</sup> <a name="id" id="@serverless-dna/constructs.DnaConstruct.Initializer.parameter.id"></a>
 
 - *Type:* string
+
+the logical id of the construct.
 
 ---
 
@@ -36,7 +40,7 @@ new DnaConstruct(scope: Construct, id: string)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@serverless-dna/constructs.DnaConstruct.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@serverless-dna/constructs.DnaConstruct.addOutput">addOutput</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.DnaConstruct.addOutput">addOutput</a></code> | Adds a local stack exports to the cloudformation stack. |
 
 ---
 
@@ -54,9 +58,13 @@ Returns a string representation of this construct.
 public addOutput(key: string, value: string, exportName?: string): CfnOutput
 ```
 
+Adds a local stack exports to the cloudformation stack.
+
 ###### `key`<sup>Required</sup> <a name="key" id="@serverless-dna/constructs.DnaConstruct.addOutput.parameter.key"></a>
 
 - *Type:* string
+
+the logical id of the CfnOutput resource.
 
 ---
 
@@ -64,11 +72,15 @@ public addOutput(key: string, value: string, exportName?: string): CfnOutput
 
 - *Type:* string
 
+value to be exported.
+
 ---
 
 ###### `exportName`<sup>Optional</sup> <a name="exportName" id="@serverless-dna/constructs.DnaConstruct.addOutput.parameter.exportName"></a>
 
 - *Type:* string
+
+name of the Stack Export variable.
 
 ---
 
@@ -133,7 +145,293 @@ The tree node.
 ---
 
 
+### PrivateVpc <a name="PrivateVpc" id="@serverless-dna/constructs.PrivateVpc"></a>
+
+This construct creates a completely private VPC in your account.
+
+It creates only a private subnet with no Internet Gateway or NAT instance so there is no access out to the internet.
+When creating the VPC you can pass in an array of `IEndpointService` objects to create the necessary virtual private endpoints.
+
+## Getting Started
+
+The following stack will create a Private VPC with VPC Endpoints for S3, Secrets Manager and Systems Manager.  For S3 and DynamoDB VPC Gateway endpoints should be used.  The construct deals with the different creation mechanisms so you just need to list out the endpoints you need to use.
+The endpoints will have private DNS configured so you do not need to change your code that is accessing the endpoint services - placing an AWS Lambda into a Private VPC will be the same code as a more public or no VPC.
+
+```typescript
+import * as cdk from 'aws-cdk-lib';
+import { InterfaceVpcEndpointAwsService, GatewayVpcEndpointAwsService } from 'aws-cdk-lib/aws-ec2';
+import { Construct } from 'constructs';
+import { PrivateVpc } from '@serverless-dna/constructs';
+
+export class VpcStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    new PrivateVpc(this, 'vpc-priv', {
+      maxAzs: 3,
+      endpointServices: [
+        { name: 's3', service: GatewayVpcEndpointAwsService.S3 },
+        { name: 'sm', service: InterfaceVpcEndpointAwsService.SECRETS_MANAGER },
+        { name: 'ssm', service: InterfaceVpcEndpointAwsService.SSM },
+      ],
+    });
+  }
+}
+```
+
+#### Initializers <a name="Initializers" id="@serverless-dna/constructs.PrivateVpc.Initializer"></a>
+
+```typescript
+import { PrivateVpc } from '@serverless-dna/constructs'
+
+new PrivateVpc(scope: Construct, id: string, config?: IPrivateVpcProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.Initializer.parameter.config">config</a></code> | <code><a href="#@serverless-dna/constructs.IPrivateVpcProps">IPrivateVpcProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="@serverless-dna/constructs.PrivateVpc.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="@serverless-dna/constructs.PrivateVpc.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `config`<sup>Optional</sup> <a name="config" id="@serverless-dna/constructs.PrivateVpc.Initializer.parameter.config"></a>
+
+- *Type:* <a href="#@serverless-dna/constructs.IPrivateVpcProps">IPrivateVpcProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.addGatewayEndpoint">addGatewayEndpoint</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.addInterfaceEndpoint">addInterfaceEndpoint</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.createEndpointServices">createEndpointServices</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.createVpc">createVpc</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.isGatewayService">isGatewayService</a></code> | Check if Service is a gatewayENdpoint service. |
+
+---
+
+##### `toString` <a name="toString" id="@serverless-dna/constructs.PrivateVpc.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `addGatewayEndpoint` <a name="addGatewayEndpoint" id="@serverless-dna/constructs.PrivateVpc.addGatewayEndpoint"></a>
+
+```typescript
+public addGatewayEndpoint(name: string, service: GatewayVpcEndpointAwsService): void
+```
+
+###### `name`<sup>Required</sup> <a name="name" id="@serverless-dna/constructs.PrivateVpc.addGatewayEndpoint.parameter.name"></a>
+
+- *Type:* string
+
+---
+
+###### `service`<sup>Required</sup> <a name="service" id="@serverless-dna/constructs.PrivateVpc.addGatewayEndpoint.parameter.service"></a>
+
+- *Type:* aws-cdk-lib.aws_ec2.GatewayVpcEndpointAwsService
+
+---
+
+##### `addInterfaceEndpoint` <a name="addInterfaceEndpoint" id="@serverless-dna/constructs.PrivateVpc.addInterfaceEndpoint"></a>
+
+```typescript
+public addInterfaceEndpoint(name: string, service: InterfaceVpcEndpointAwsService): void
+```
+
+###### `name`<sup>Required</sup> <a name="name" id="@serverless-dna/constructs.PrivateVpc.addInterfaceEndpoint.parameter.name"></a>
+
+- *Type:* string
+
+---
+
+###### `service`<sup>Required</sup> <a name="service" id="@serverless-dna/constructs.PrivateVpc.addInterfaceEndpoint.parameter.service"></a>
+
+- *Type:* aws-cdk-lib.aws_ec2.InterfaceVpcEndpointAwsService
+
+---
+
+##### `createEndpointServices` <a name="createEndpointServices" id="@serverless-dna/constructs.PrivateVpc.createEndpointServices"></a>
+
+```typescript
+public createEndpointServices(endpointServices: IEndpointService[]): void
+```
+
+###### `endpointServices`<sup>Required</sup> <a name="endpointServices" id="@serverless-dna/constructs.PrivateVpc.createEndpointServices.parameter.endpointServices"></a>
+
+- *Type:* <a href="#@serverless-dna/constructs.IEndpointService">IEndpointService</a>[]
+
+---
+
+##### `createVpc` <a name="createVpc" id="@serverless-dna/constructs.PrivateVpc.createVpc"></a>
+
+```typescript
+public createVpc(config: IPrivateVpcProps): Vpc
+```
+
+###### `config`<sup>Required</sup> <a name="config" id="@serverless-dna/constructs.PrivateVpc.createVpc.parameter.config"></a>
+
+- *Type:* <a href="#@serverless-dna/constructs.IPrivateVpcProps">IPrivateVpcProps</a>
+
+---
+
+##### `isGatewayService` <a name="isGatewayService" id="@serverless-dna/constructs.PrivateVpc.isGatewayService"></a>
+
+```typescript
+public isGatewayService(service: InterfaceVpcEndpointAwsService | GatewayVpcEndpointAwsService): boolean
+```
+
+Check if Service is a gatewayENdpoint service.
+
+###### `service`<sup>Required</sup> <a name="service" id="@serverless-dna/constructs.PrivateVpc.isGatewayService.parameter.service"></a>
+
+- *Type:* aws-cdk-lib.aws_ec2.InterfaceVpcEndpointAwsService | aws-cdk-lib.aws_ec2.GatewayVpcEndpointAwsService
+
+---
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@serverless-dna/constructs.PrivateVpc.isConstruct"></a>
+
+```typescript
+import { PrivateVpc } from '@serverless-dna/constructs'
+
+PrivateVpc.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@serverless-dna/constructs.PrivateVpc.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.Vpc</code> | A new private vpc instance or the one provided in the construct config. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@serverless-dna/constructs.PrivateVpc.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `vpc`<sup>Required</sup> <a name="vpc" id="@serverless-dna/constructs.PrivateVpc.property.vpc"></a>
+
+```typescript
+public readonly vpc: Vpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.Vpc
+
+A new private vpc instance or the one provided in the construct config.
+
+---
+
+
 ### SocketApi <a name="SocketApi" id="@serverless-dna/constructs.SocketApi"></a>
+
+This construct creates an AWS WebSocket API with routes that are handled by AWS Lambda functions.
+
+A WebSocket can only exist when there are one or more valid integrations defined.  If you do not define any integrations the WebSocket API will not be deployed.
+
+## Getting Started
+
+The SocketAPI accepts an array of route definitions of type **ISocketFunction**.
+**Important Note** If you provide no routes to this construct, the construct will not deploy an API gateway.  An endpoint is required for the Websocket API to deploy.
+
+```typescript
+ import { SocketApi }
+
+```typescript
+ export interface ISocketFunction {
+   readonly route: string;
+   readonly type?: SocketApiIntegrationType;
+   readonly integration: Function;
+   readonly returnResponse?: boolean;
+ }
+```
+
+To create a WebSocket API you will need to provide a Lambda handler construct to execute your WebSocket API action.  The following example shows how to setup a WebSocket API with a **test** action route which is handled by the **test-func** lambda handler.
+
+```typescript
+ import { SocketApi } from '@serverless-dna/constructs';
+ import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+ import { Runtime } from 'aws-cdk-lib/aws-lambda';
+ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+ import { Construct } from 'constructs';
+ import { IntegrationHandlers } from './integrations';
+
+ export class ApplicationStack extends Stack {
+   constructor(scope: Construct, id: string, props?: StackProps) {
+   super(scope, id, props);
+
+   const handler = new NodejsFunction(this, `test-func`, {
+     entry: `${__dirname}/integrations.ts`,
+     handler: IntegrationHandlers.noOp,
+     runtime: Runtime.NODEJS_18_X,
+     timeout: Duration.seconds(3),
+   });
+
+   new SocketApi(this, 'socket-api', {
+     routes: [{ route: 'test', integration: handler, returnResponse: true }],
+     });
+   }
+ }
+```
 
 #### Initializers <a name="Initializers" id="@serverless-dna/constructs.SocketApi.Initializer"></a>
 
@@ -174,9 +472,9 @@ new SocketApi(scope: Construct, id: string, config?: ISocketApiConfig)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@serverless-dna/constructs.SocketApi.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@serverless-dna/constructs.SocketApi.addOutput">addOutput</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketApi.addOutput">addOutput</a></code> | Adds a local stack exports to the cloudformation stack. |
 | <code><a href="#@serverless-dna/constructs.SocketApi.addFunctionRoute">addFunctionRoute</a></code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.SocketApi.arnForExecuteApi">arnForExecuteApi</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketApi.arnForExecuteApi">arnForExecuteApi</a></code> | returns the Fully Qualified ARN for the web socket API for use in policy statements. |
 
 ---
 
@@ -194,9 +492,13 @@ Returns a string representation of this construct.
 public addOutput(key: string, value: string, exportName?: string): CfnOutput
 ```
 
+Adds a local stack exports to the cloudformation stack.
+
 ###### `key`<sup>Required</sup> <a name="key" id="@serverless-dna/constructs.SocketApi.addOutput.parameter.key"></a>
 
 - *Type:* string
+
+the logical id of the CfnOutput resource.
 
 ---
 
@@ -204,11 +506,15 @@ public addOutput(key: string, value: string, exportName?: string): CfnOutput
 
 - *Type:* string
 
+value to be exported.
+
 ---
 
 ###### `exportName`<sup>Optional</sup> <a name="exportName" id="@serverless-dna/constructs.SocketApi.addOutput.parameter.exportName"></a>
 
 - *Type:* string
+
+name of the Stack Export variable.
 
 ---
 
@@ -247,6 +553,8 @@ Defaults to false.
 ```typescript
 public arnForExecuteApi(): string
 ```
+
+returns the Fully Qualified ARN for the web socket API for use in policy statements.
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -311,6 +619,54 @@ The tree node.
 
 ### SocketTasks <a name="SocketTasks" id="@serverless-dna/constructs.SocketTasks"></a>
 
+This construct inherits from the SocketAPI and creates a complete Asychronous Task Execution framework using WebSockets and AWS Lambda for running long-running tasks.
+
+An ideal use case when your tasks take too long to trigger via an API Gateway directly!
+
+## Getting Started
+
+```typescript
+import { SocketTasks } from '@serverless-dna/constructs';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Construct } from 'constructs';
+import { IntegrationHandlers } from './integrations';
+
+export class ApplicationStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
+    super(scope, id, props);
+
+    const handlerOne = new NodejsFunction(this, `handler-one`, {
+      entry: `${__dirname}/integrations.ts`,
+      handler: IntegrationHandlers.taskHandler,
+      runtime: Runtime.NODEJS_18_X,
+      timeout: Duration.seconds(3),
+    });
+
+    const handlerTwo = new NodejsFunction(this, `handler-two`, {
+      entry: `${__dirname}/integrations.ts`,
+      handler: IntegrationHandlers.taskFail,
+      runtime: Runtime.NODEJS_18_X,
+      timeout: Duration.seconds(3),
+    });
+
+    new SocketTasks(this, `tasks`, {
+      taskFunctions: [
+        {
+          type: ['task-type'],
+          func: handlerOne,
+        },
+        {
+          type: ['task-type-2'],
+          func: handlerTwo,
+        },
+      ],
+    });
+  }
+}
+```
+
 #### Initializers <a name="Initializers" id="@serverless-dna/constructs.SocketTasks.Initializer"></a>
 
 ```typescript
@@ -350,9 +706,9 @@ new SocketTasks(scope: Construct, id: string, config: ISocketTasksConfig)
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.addOutput">addOutput</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.addOutput">addOutput</a></code> | Adds a local stack exports to the cloudformation stack. |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.addFunctionRoute">addFunctionRoute</a></code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.arnForExecuteApi">arnForExecuteApi</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.arnForExecuteApi">arnForExecuteApi</a></code> | returns the Fully Qualified ARN for the web socket API for use in policy statements. |
 
 ---
 
@@ -370,9 +726,13 @@ Returns a string representation of this construct.
 public addOutput(key: string, value: string, exportName?: string): CfnOutput
 ```
 
+Adds a local stack exports to the cloudformation stack.
+
 ###### `key`<sup>Required</sup> <a name="key" id="@serverless-dna/constructs.SocketTasks.addOutput.parameter.key"></a>
 
 - *Type:* string
+
+the logical id of the CfnOutput resource.
 
 ---
 
@@ -380,11 +740,15 @@ public addOutput(key: string, value: string, exportName?: string): CfnOutput
 
 - *Type:* string
 
+value to be exported.
+
 ---
 
 ###### `exportName`<sup>Optional</sup> <a name="exportName" id="@serverless-dna/constructs.SocketTasks.addOutput.parameter.exportName"></a>
 
 - *Type:* string
+
+name of the Stack Export variable.
 
 ---
 
@@ -423,6 +787,8 @@ Defaults to false.
 ```typescript
 public arnForExecuteApi(): string
 ```
+
+returns the Fully Qualified ARN for the web socket API for use in policy statements.
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -469,8 +835,8 @@ Any object.
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.property.eventBus">eventBus</a></code> | <code>aws-cdk-lib.aws_events.IEventBus</code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.property.notifySQS">notifySQS</a></code> | <code>aws-cdk-lib.aws_sqs.IQueue</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.property.eventBus">eventBus</a></code> | <code>aws-cdk-lib.aws_events.IEventBus</code> | reference to the `IEventBus` used by the construct to trigger the defined tasks. |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.property.notifySQS">notifySQS</a></code> | <code>aws-cdk-lib.aws_sqs.IQueue</code> | reference to the SQS Queue used by the construct for notification purposes. |
 
 ---
 
@@ -494,6 +860,8 @@ public readonly eventBus: IEventBus;
 
 - *Type:* aws-cdk-lib.aws_events.IEventBus
 
+reference to the `IEventBus` used by the construct to trigger the defined tasks.
+
 ---
 
 ##### `notifySQS`<sup>Required</sup> <a name="notifySQS" id="@serverless-dna/constructs.SocketTasks.property.notifySQS"></a>
@@ -504,12 +872,124 @@ public readonly notifySQS: IQueue;
 
 - *Type:* aws-cdk-lib.aws_sqs.IQueue
 
+reference to the SQS Queue used by the construct for notification purposes.
+
 ---
 
 
 
 
 ## Protocols <a name="Protocols" id="Protocols"></a>
+
+### IEndpointService <a name="IEndpointService" id="@serverless-dna/constructs.IEndpointService"></a>
+
+- *Implemented By:* <a href="#@serverless-dna/constructs.IEndpointService">IEndpointService</a>
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@serverless-dna/constructs.IEndpointService.property.name">name</a></code> | <code>string</code> | Name of the service, used in the logical name of the endpoint resource created so must be unique. |
+| <code><a href="#@serverless-dna/constructs.IEndpointService.property.service">service</a></code> | <code>aws-cdk-lib.aws_ec2.InterfaceVpcEndpointAwsService \| aws-cdk-lib.aws_ec2.GatewayVpcEndpointAwsService</code> | The endpoint interface to create. |
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="@serverless-dna/constructs.IEndpointService.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Name of the service, used in the logical name of the endpoint resource created so must be unique.
+
+---
+
+##### `service`<sup>Required</sup> <a name="service" id="@serverless-dna/constructs.IEndpointService.property.service"></a>
+
+```typescript
+public readonly service: InterfaceVpcEndpointAwsService | GatewayVpcEndpointAwsService;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.InterfaceVpcEndpointAwsService | aws-cdk-lib.aws_ec2.GatewayVpcEndpointAwsService
+
+The endpoint interface to create.
+
+For S3 and DynamoDB use GatewayVpcEndpointAwsService.S3 and GatewayVpcEndpointAwsService.DYNAMODB
+
+---
+
+### IPrivateVpcProps <a name="IPrivateVpcProps" id="@serverless-dna/constructs.IPrivateVpcProps"></a>
+
+- *Implemented By:* <a href="#@serverless-dna/constructs.IPrivateVpcProps">IPrivateVpcProps</a>
+
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@serverless-dna/constructs.IPrivateVpcProps.property.cidrMask">cidrMask</a></code> | <code>number</code> | The cidr mask to use. |
+| <code><a href="#@serverless-dna/constructs.IPrivateVpcProps.property.endpointServices">endpointServices</a></code> | <code><a href="#@serverless-dna/constructs.IEndpointService">IEndpointService</a>[]</code> | The endpoint services to enable, an array of endpoint services. |
+| <code><a href="#@serverless-dna/constructs.IPrivateVpcProps.property.maxAzs">maxAzs</a></code> | <code>number</code> | The maximum AZs to use. |
+| <code><a href="#@serverless-dna/constructs.IPrivateVpcProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.Vpc</code> | Use an existing VPC. |
+
+---
+
+##### `cidrMask`<sup>Optional</sup> <a name="cidrMask" id="@serverless-dna/constructs.IPrivateVpcProps.property.cidrMask"></a>
+
+```typescript
+public readonly cidrMask: number;
+```
+
+- *Type:* number
+- *Default:* 24
+
+The cidr mask to use.
+
+Can onluy provide this when not providing an already constructed vpc
+
+---
+
+##### `endpointServices`<sup>Optional</sup> <a name="endpointServices" id="@serverless-dna/constructs.IPrivateVpcProps.property.endpointServices"></a>
+
+```typescript
+public readonly endpointServices: IEndpointService[];
+```
+
+- *Type:* <a href="#@serverless-dna/constructs.IEndpointService">IEndpointService</a>[]
+- *Default:* null
+
+The endpoint services to enable, an array of endpoint services.
+
+---
+
+##### `maxAzs`<sup>Optional</sup> <a name="maxAzs" id="@serverless-dna/constructs.IPrivateVpcProps.property.maxAzs"></a>
+
+```typescript
+public readonly maxAzs: number;
+```
+
+- *Type:* number
+- *Default:* 3
+
+The maximum AZs to use.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="@serverless-dna/constructs.IPrivateVpcProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: Vpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.Vpc
+- *Default:* null
+
+Use an existing VPC.
+
+---
 
 ### ISocketApiConfig <a name="ISocketApiConfig" id="@serverless-dna/constructs.ISocketApiConfig"></a>
 

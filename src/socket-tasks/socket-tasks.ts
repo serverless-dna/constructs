@@ -20,8 +20,61 @@ export interface ISocketTasksConfig {
   readonly taskFunctions: ITaskFunctionConfig[];
 }
 
+/**
+ * This construct inherits from the SocketAPI and creates a complete Asychronous Task Execution framework using WebSockets and AWS Lambda for running long-running tasks.  An ideal use case when your tasks take too long to trigger via an API Gateway directly!
+ *
+ * ## Getting Started
+ *
+ * ```typescript
+ * import { SocketTasks } from '@serverless-dna/constructs';
+ * import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+ * import { Runtime } from 'aws-cdk-lib/aws-lambda';
+ * import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+ * import { Construct } from 'constructs';
+ * import { IntegrationHandlers } from './integrations';
+ *
+ * export class ApplicationStack extends Stack {
+ *   constructor(scope: Construct, id: string, props?: StackProps) {
+ *     super(scope, id, props);
+ *
+ *     const handlerOne = new NodejsFunction(this, `handler-one`, {
+ *       entry: `${__dirname}/integrations.ts`,
+ *       handler: IntegrationHandlers.taskHandler,
+ *       runtime: Runtime.NODEJS_18_X,
+ *       timeout: Duration.seconds(3),
+ *     });
+ *
+ *     const handlerTwo = new NodejsFunction(this, `handler-two`, {
+ *       entry: `${__dirname}/integrations.ts`,
+ *       handler: IntegrationHandlers.taskFail,
+ *       runtime: Runtime.NODEJS_18_X,
+ *       timeout: Duration.seconds(3),
+ *     });
+ *
+ *     new SocketTasks(this, `tasks`, {
+ *       taskFunctions: [
+ *         {
+ *           type: ['task-type'],
+ *           func: handlerOne,
+ *         },
+ *         {
+ *           type: ['task-type-2'],
+ *           func: handlerTwo,
+ *         },
+ *       ],
+ *     });
+ *   }
+ * }
+ * ```
+ */
 export class SocketTasks extends SocketApi {
+  /**
+   * reference to the `IEventBus` used by the construct to trigger the defined tasks.
+   */
   readonly eventBus: IEventBus;
+  /**
+   * reference to the SQS Queue used by the construct for notification purposes.
+   */
   readonly notifySQS: IQueue;
 
   constructor(scope: Construct, id: string, config: ISocketTasksConfig) {
@@ -33,6 +86,10 @@ export class SocketTasks extends SocketApi {
     this.configureTasks(config);
   }
 
+  /**
+   * Configures the Task destinations.  Creates the Lambda Destination config and creates the EventBus rule pattern to ensure the Lambda function is triggered.
+   * @param config - Configuration holds the `taskFunctions` which is an array of tasks to be processed and configured for the SocketTasks instance.
+   */
   protected configureTasks(config: ISocketTasksConfig): void {
     const notifyQueue = this.notifySQS;
     this.createNotifyHandler(notifyQueue);
@@ -55,6 +112,10 @@ export class SocketTasks extends SocketApi {
     );
   }
 
+  /**
+   * @param theQueue Creates the Notification SQS Queue used by the construct.
+   * @returns theQueue which is either created y this function or was provided in the config by the caller.
+   */
   protected createNotifySQS(theQueue?: IQueue): IQueue {
     return theQueue ?? new Queue(this, 'notify-queue', {});
   }
