@@ -181,6 +181,9 @@
       "steps": [
         {
           "spawn": "docgen"
+        },
+        {
+          "spawn": "type-doc"
         }
       ]
     },
@@ -243,7 +246,7 @@
       "name": "type-doc",
       "steps": [
         {
-          "exec": "npx typedoc --readme ./typedoc-root.md --name \"Serverless DNA Constructs\" --out docs src"
+          "exec": "npx typedoc --readme ./README.md --name \"Serverless DNA Constructs\" --out docs src"
         }
       ]
     },

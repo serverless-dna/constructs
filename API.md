@@ -147,6 +147,38 @@ The tree node.
 
 ### PrivateVpc <a name="PrivateVpc" id="@serverless-dna/constructs.PrivateVpc"></a>
 
+This construct creates a completely private VPC in your account.
+
+It creates only a private subnet with no Internet Gateway or NAT instance so there is no access out to the internet.
+When creating the VPC you can pass in an array of `IEndpointService` objects to create the necessary virtual private endpoints.
+
+## Getting Started
+
+The following stack will create a Private VPC with VPC Endpoints for S3, Secrets Manager and Systems Manager.  For S3 and DynamoDB VPC Gateway endpoints should be used.  The construct deals with the different creation mechanisms so you just need to list out the endpoints you need to use.
+The endpoints will have private DNS configured so you do not need to change your code that is accessing the endpoint services - placing an AWS Lambda into a Private VPC will be the same code as a more public or no VPC.
+
+```typescript
+import * as cdk from 'aws-cdk-lib';
+import { InterfaceVpcEndpointAwsService, GatewayVpcEndpointAwsService } from 'aws-cdk-lib/aws-ec2';
+import { Construct } from 'constructs';
+import { PrivateVpc } from '@serverless-dna/constructs';
+
+export class VpcStack extends cdk.Stack {
+  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    new PrivateVpc(this, 'vpc-priv', {
+      maxAzs: 3,
+      endpointServices: [
+        { name: 's3', service: GatewayVpcEndpointAwsService.S3 },
+        { name: 'sm', service: InterfaceVpcEndpointAwsService.SECRETS_MANAGER },
+        { name: 'ssm', service: InterfaceVpcEndpointAwsService.SSM },
+      ],
+    });
+  }
+}
+```
+
 #### Initializers <a name="Initializers" id="@serverless-dna/constructs.PrivateVpc.Initializer"></a>
 
 ```typescript
@@ -190,6 +222,7 @@ new PrivateVpc(scope: Construct, id: string, config?: IPrivateVpcProps)
 | <code><a href="#@serverless-dna/constructs.PrivateVpc.addInterfaceEndpoint">addInterfaceEndpoint</a></code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.PrivateVpc.createEndpointServices">createEndpointServices</a></code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.PrivateVpc.createVpc">createVpc</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.PrivateVpc.isGatewayService">isGatewayService</a></code> | Check if Service is a gatewayENdpoint service. |
 
 ---
 
@@ -258,6 +291,20 @@ public createVpc(config: IPrivateVpcProps): Vpc
 ###### `config`<sup>Required</sup> <a name="config" id="@serverless-dna/constructs.PrivateVpc.createVpc.parameter.config"></a>
 
 - *Type:* <a href="#@serverless-dna/constructs.IPrivateVpcProps">IPrivateVpcProps</a>
+
+---
+
+##### `isGatewayService` <a name="isGatewayService" id="@serverless-dna/constructs.PrivateVpc.isGatewayService"></a>
+
+```typescript
+public isGatewayService(service: InterfaceVpcEndpointAwsService | GatewayVpcEndpointAwsService): boolean
+```
+
+Check if Service is a gatewayENdpoint service.
+
+###### `service`<sup>Required</sup> <a name="service" id="@serverless-dna/constructs.PrivateVpc.isGatewayService.parameter.service"></a>
+
+- *Type:* aws-cdk-lib.aws_ec2.InterfaceVpcEndpointAwsService | aws-cdk-lib.aws_ec2.GatewayVpcEndpointAwsService
 
 ---
 
@@ -344,6 +391,10 @@ A WebSocket can only exist when there are one or more valid integrations defined
 ## Getting Started
 
 The SocketAPI accepts an array of route definitions of type **ISocketFunction**.
+**Important Note** If you provide no routes to this construct, the construct will not deploy an API gateway.  An endpoint is required for the Websocket API to deploy.
+
+```typescript
+ import { SocketApi }
 
 ```typescript
  export interface ISocketFunction {
@@ -423,7 +474,7 @@ new SocketApi(scope: Construct, id: string, config?: ISocketApiConfig)
 | <code><a href="#@serverless-dna/constructs.SocketApi.toString">toString</a></code> | Returns a string representation of this construct. |
 | <code><a href="#@serverless-dna/constructs.SocketApi.addOutput">addOutput</a></code> | Adds a local stack exports to the cloudformation stack. |
 | <code><a href="#@serverless-dna/constructs.SocketApi.addFunctionRoute">addFunctionRoute</a></code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.SocketApi.arnForExecuteApi">arnForExecuteApi</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketApi.arnForExecuteApi">arnForExecuteApi</a></code> | returns the Fully Qualified ARN for the web socket API for use in policy statements. |
 
 ---
 
@@ -502,6 +553,8 @@ Defaults to false.
 ```typescript
 public arnForExecuteApi(): string
 ```
+
+returns the Fully Qualified ARN for the web socket API for use in policy statements.
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
@@ -655,7 +708,7 @@ new SocketTasks(scope: Construct, id: string, config: ISocketTasksConfig)
 | <code><a href="#@serverless-dna/constructs.SocketTasks.toString">toString</a></code> | Returns a string representation of this construct. |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.addOutput">addOutput</a></code> | Adds a local stack exports to the cloudformation stack. |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.addFunctionRoute">addFunctionRoute</a></code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.SocketTasks.arnForExecuteApi">arnForExecuteApi</a></code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.arnForExecuteApi">arnForExecuteApi</a></code> | returns the Fully Qualified ARN for the web socket API for use in policy statements. |
 
 ---
 
@@ -734,6 +787,8 @@ Defaults to false.
 ```typescript
 public arnForExecuteApi(): string
 ```
+
+returns the Fully Qualified ARN for the web socket API for use in policy statements.
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
