@@ -10,7 +10,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   constructsVersion: '10.3.0',
   description: 'A collection of useful CDK constructs of known, repeatable patterns that are easily consumable.',
   defaultReleaseBranch: 'main',
-  gitignore: ['.DS_Store'],
+  gitignore: ['.DS_Store', 'docs'],
   jsiiVersion: '~5.2.0',
   majorVersion: 0,
   name: '@serverless-dna/constructs',
@@ -34,11 +34,8 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
 });
 
 const typeDoc = 'type-doc';
-const typeDocTask = constructLib.addTask(typeDoc, {
+constructLib.addTask(typeDoc, {
   exec: 'npx typedoc --readme ./README.md --name "Serverless DNA Constructs" --out docs src',
 });
-const postCompileTask = constructLib.tasks.tryFind('post-compile');
-if (postCompileTask) {
-  postCompileTask.spawn(typeDocTask);
-}
+
 constructLib.synth();
