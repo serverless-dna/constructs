@@ -86,6 +86,10 @@ export class SocketTasks extends SocketApi {
     this.configureTasks(config);
   }
 
+  public socketCallbackUrl(): string {
+    return this.socketStage.callbackUrl;
+  }
+
   /**
    * Configures the Task destinations.  Creates the Lambda Destination config and creates the EventBus rule pattern to ensure the Lambda function is triggered.
    * @param config - Configuration holds the `taskFunctions` which is an array of tasks to be processed and configured for the SocketTasks instance.
@@ -154,7 +158,7 @@ export class SocketTasks extends SocketApi {
       runtime: Runtime.NODEJS_18_X,
       initialPolicy: [socketApiPolicy],
       environment: {
-        WEBSOCKET_API: this.socketStage.callbackUrl,
+        WEBSOCKET_API: this.socketCallbackUrl(),
       },
     });
 

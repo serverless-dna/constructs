@@ -709,6 +709,7 @@ new SocketTasks(scope: Construct, id: string, config: ISocketTasksConfig)
 | <code><a href="#@serverless-dna/constructs.SocketTasks.addOutput">addOutput</a></code> | Adds a local stack exports to the cloudformation stack. |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.addFunctionRoute">addFunctionRoute</a></code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.SocketTasks.arnForExecuteApi">arnForExecuteApi</a></code> | returns the Fully Qualified ARN for the web socket API for use in policy statements. |
+| <code><a href="#@serverless-dna/constructs.SocketTasks.socketCallbackUrl">socketCallbackUrl</a></code> | *No description.* |
 
 ---
 
@@ -789,6 +790,12 @@ public arnForExecuteApi(): string
 ```
 
 returns the Fully Qualified ARN for the web socket API for use in policy statements.
+
+##### `socketCallbackUrl` <a name="socketCallbackUrl" id="@serverless-dna/constructs.SocketTasks.socketCallbackUrl"></a>
+
+```typescript
+public socketCallbackUrl(): string
+```
 
 #### Static Functions <a name="Static Functions" id="Static Functions"></a>
 
