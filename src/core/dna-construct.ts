@@ -1,6 +1,6 @@
 import { CfnOutput } from 'aws-cdk-lib';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
 
 export const NODE_RUNTIME = Runtime.NODEJS_20_X;
 
