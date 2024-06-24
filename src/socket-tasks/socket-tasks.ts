@@ -1,11 +1,12 @@
 import { IEventBus, EventBus, Rule } from 'aws-cdk-lib/aws-events';
 import { LambdaFunction as LambdaFunctionTarget } from 'aws-cdk-lib/aws-events-targets';
 import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
-import { Runtime, IFunction, EventSourceMapping } from 'aws-cdk-lib/aws-lambda';
+import { IFunction, EventSourceMapping } from 'aws-cdk-lib/aws-lambda';
 import { SqsDestination } from 'aws-cdk-lib/aws-lambda-destinations';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { IQueue, Queue } from 'aws-cdk-lib/aws-sqs';
 import { Construct } from 'constructs';
+import { NODE_RUNTIME } from '../core';
 import { SocketApi, ISocketApiConfig } from '../socketapi';
 
 export interface ITaskFunctionConfig {
@@ -32,6 +33,7 @@ export interface ISocketTasksConfig {
  * import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
  * import { Construct } from 'constructs';
  * import { IntegrationHandlers } from './integrations';
+ * import { NODE_RUNTIME } from '../core';
  *
  * export class ApplicationStack extends Stack {
  *   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -40,14 +42,14 @@ export interface ISocketTasksConfig {
  *     const handlerOne = new NodejsFunction(this, `handler-one`, {
  *       entry: `${__dirname}/integrations.ts`,
  *       handler: IntegrationHandlers.taskHandler,
- *       runtime: Runtime.NODEJS_18_X,
+ *       runtime: NODE_RUNTIME,
  *       timeout: Duration.seconds(3),
  *     });
  *
  *     const handlerTwo = new NodejsFunction(this, `handler-two`, {
  *       entry: `${__dirname}/integrations.ts`,
  *       handler: IntegrationHandlers.taskFail,
- *       runtime: Runtime.NODEJS_18_X,
+ *       runtime: NODE_RUNTIME,
  *       timeout: Duration.seconds(3),
  *     });
  *
@@ -133,7 +135,7 @@ export class SocketTasks extends SocketApi {
     const submitHandler = new NodejsFunction(this, 'submit', {
       entry: `${__dirname}/functions/task-submit.js`,
       handler: 'taskSubmitHandler',
-      runtime: Runtime.NODEJS_18_X,
+      runtime: NODE_RUNTIME,
       environment: {
         TASK_BUS: theBus.eventBusName,
       },
@@ -155,7 +157,7 @@ export class SocketTasks extends SocketApi {
     const notifyHandler = new NodejsFunction(this, 'notify', {
       entry: `${__dirname}/functions/task-notify.js`,
       handler: 'taskNotifyHandler',
-      runtime: Runtime.NODEJS_18_X,
+      runtime: NODE_RUNTIME,
       initialPolicy: [socketApiPolicy],
       environment: {
         WEBSOCKET_API: this.socketCallbackUrl(),

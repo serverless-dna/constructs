@@ -414,6 +414,7 @@ To create a WebSocket API you will need to provide a Lambda handler construct to
  import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
  import { Construct } from 'constructs';
  import { IntegrationHandlers } from './integrations';
+ import { NODE_RUNTIME } from '../core';
 
  export class ApplicationStack extends Stack {
    constructor(scope: Construct, id: string, props?: StackProps) {
@@ -422,7 +423,7 @@ To create a WebSocket API you will need to provide a Lambda handler construct to
    const handler = new NodejsFunction(this, `test-func`, {
      entry: `${__dirname}/integrations.ts`,
      handler: IntegrationHandlers.noOp,
-     runtime: Runtime.NODEJS_18_X,
+     runtime: NODE_RUNTIME,
      timeout: Duration.seconds(3),
    });
 
@@ -632,6 +633,7 @@ import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { IntegrationHandlers } from './integrations';
+import { NODE_RUNTIME } from '../core';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -640,14 +642,14 @@ export class ApplicationStack extends Stack {
     const handlerOne = new NodejsFunction(this, `handler-one`, {
       entry: `${__dirname}/integrations.ts`,
       handler: IntegrationHandlers.taskHandler,
-      runtime: Runtime.NODEJS_18_X,
+      runtime: NODE_RUNTIME,
       timeout: Duration.seconds(3),
     });
 
     const handlerTwo = new NodejsFunction(this, `handler-two`, {
       entry: `${__dirname}/integrations.ts`,
       handler: IntegrationHandlers.taskFail,
-      runtime: Runtime.NODEJS_18_X,
+      runtime: NODE_RUNTIME,
       timeout: Duration.seconds(3),
     });
 
@@ -1010,7 +1012,7 @@ Use an existing VPC.
 | <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.removalPolicy">removalPolicy</a></code> | <code>aws-cdk-lib.RemovalPolicy</code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.routes">routes</a></code> | <code><a href="#@serverless-dna/constructs.ISocketFunction">ISocketFunction</a>[]</code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.stage">stage</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.websocketConfig">websocketConfig</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.WebSocketApiProps</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.websocketConfig">websocketConfig</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.WebSocketApiProps</code> | *No description.* |
 
 ---
 
@@ -1050,7 +1052,7 @@ public readonly stage: string;
 public readonly websocketConfig: WebSocketApiProps;
 ```
 
-- *Type:* @aws-cdk/aws-apigatewayv2-alpha.WebSocketApiProps
+- *Type:* aws-cdk-lib.aws_apigatewayv2.WebSocketApiProps
 
 ---
 

@@ -1,7 +1,7 @@
 import { awscdk, javascript } from 'projen';
 
 const packageManager = javascript.NodePackageManager.NPM;
-const cdkVersion = '2.104.0';
+const cdkVersion = '2.147.0';
 
 const constructLib = new awscdk.AwsCdkConstructLibrary({
   author: 'walmsles',
@@ -10,8 +10,8 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
   constructsVersion: '10.3.0',
   description: 'A collection of useful CDK constructs of known, repeatable patterns that are easily consumable.',
   defaultReleaseBranch: 'main',
-  gitignore: ['.DS_Store', 'docs'],
-  jsiiVersion: '~5.2.0',
+  gitignore: ['.DS_Store', 'docs', '.idea'],
+  jsiiVersion: '~5.4.0',
   majorVersion: 0,
   name: '@serverless-dna/constructs',
   packageManager,
@@ -23,13 +23,7 @@ const constructLib = new awscdk.AwsCdkConstructLibrary({
     '@aws-sdk/client-apigatewaymanagementapi',
   ],
   devDeps: [
-    '@aws-cdk/aws-apigatewayv2-alpha@2.100.0-alpha.0',
-    '@aws-cdk/aws-apigatewayv2-integrations-alpha@2.100.0-alpha.0',
     'typedoc',
-  ],
-  peerDeps: [
-    '@aws-cdk/aws-apigatewayv2-alpha@^2.100.0-alpha.0',
-    '@aws-cdk/aws-apigatewayv2-integrations-alpha@^2.100.0-alpha.0',
   ],
 });
 

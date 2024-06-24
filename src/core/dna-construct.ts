@@ -1,6 +1,8 @@
 import { CfnOutput } from 'aws-cdk-lib';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
+export const NODE_RUNTIME = Runtime.NODEJS_20_X;
 
 export class DnaConstruct extends Construct {
   /**

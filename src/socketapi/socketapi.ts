@@ -1,7 +1,7 @@
 
-import { WebSocketApi, WebSocketStage, WebSocketApiProps } from '@aws-cdk/aws-apigatewayv2-alpha';
-import { WebSocketLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import { Stack, ArnFormat, RemovalPolicy } from 'aws-cdk-lib';
+import { WebSocketApi, WebSocketStage, WebSocketApiProps } from 'aws-cdk-lib/aws-apigatewayv2';
+import { WebSocketLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Function } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { DnaConstruct } from '../core/dna-construct';
@@ -55,6 +55,7 @@ export interface ISocketApiConfig {
  *  import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
  *  import { Construct } from 'constructs';
  *  import { IntegrationHandlers } from './integrations';
+ *  import { NODE_RUNTIME } from '../core';
  *
  *  export class ApplicationStack extends Stack {
  *    constructor(scope: Construct, id: string, props?: StackProps) {
@@ -63,7 +64,7 @@ export interface ISocketApiConfig {
  *    const handler = new NodejsFunction(this, `test-func`, {
  *      entry: `${__dirname}/integrations.ts`,
  *      handler: IntegrationHandlers.noOp,
- *      runtime: Runtime.NODEJS_18_X,
+ *      runtime: NODE_RUNTIME,
  *      timeout: Duration.seconds(3),
  *    });
  *

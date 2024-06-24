@@ -1,16 +1,6 @@
 {
   "dependencies": [
     {
-      "name": "@aws-cdk/aws-apigatewayv2-alpha",
-      "version": "2.100.0-alpha.0",
-      "type": "build"
-    },
-    {
-      "name": "@aws-cdk/aws-apigatewayv2-integrations-alpha",
-      "version": "2.100.0-alpha.0",
-      "type": "build"
-    },
-    {
       "name": "@types/jest",
       "type": "build"
     },
@@ -65,12 +55,12 @@
     },
     {
       "name": "jsii-rosetta",
-      "version": "~5.2.0",
+      "version": "~5.4.0",
       "type": "build"
     },
     {
       "name": "jsii",
-      "version": "~5.2.0",
+      "version": "~5.4.0",
       "type": "build"
     },
     {
@@ -107,18 +97,8 @@
       "type": "bundled"
     },
     {
-      "name": "@aws-cdk/aws-apigatewayv2-alpha",
-      "version": "^2.100.0-alpha.0",
-      "type": "peer"
-    },
-    {
-      "name": "@aws-cdk/aws-apigatewayv2-integrations-alpha",
-      "version": "^2.100.0-alpha.0",
-      "type": "peer"
-    },
-    {
       "name": "aws-cdk-lib",
-      "version": "^2.104.0",
+      "version": "^2.147.0",
       "type": "peer"
     },
     {
