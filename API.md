@@ -1010,7 +1010,7 @@ Use an existing VPC.
 | <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.removalPolicy">removalPolicy</a></code> | <code>aws-cdk-lib.RemovalPolicy</code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.routes">routes</a></code> | <code><a href="#@serverless-dna/constructs.ISocketFunction">ISocketFunction</a>[]</code> | *No description.* |
 | <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.stage">stage</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.websocketConfig">websocketConfig</a></code> | <code>@aws-cdk/aws-apigatewayv2-alpha.WebSocketApiProps</code> | *No description.* |
+| <code><a href="#@serverless-dna/constructs.ISocketApiConfig.property.websocketConfig">websocketConfig</a></code> | <code>aws-cdk-lib.aws_apigatewayv2.WebSocketApiProps</code> | *No description.* |
 
 ---
 
@@ -1050,7 +1050,7 @@ public readonly stage: string;
 public readonly websocketConfig: WebSocketApiProps;
 ```
 
-- *Type:* @aws-cdk/aws-apigatewayv2-alpha.WebSocketApiProps
+- *Type:* aws-cdk-lib.aws_apigatewayv2.WebSocketApiProps
 
 ---
 

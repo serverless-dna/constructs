@@ -1,7 +1,7 @@
 
-import { WebSocketApi, WebSocketStage, WebSocketApiProps } from '@aws-cdk/aws-apigatewayv2-alpha';
-import { WebSocketLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
 import { Stack, ArnFormat, RemovalPolicy } from 'aws-cdk-lib';
+import { WebSocketApi, WebSocketStage, WebSocketApiProps } from 'aws-cdk-lib/aws-apigatewayv2';
+import { WebSocketLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Function } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { DnaConstruct } from '../core/dna-construct';
